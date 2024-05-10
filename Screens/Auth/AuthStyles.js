@@ -21,7 +21,8 @@ const AuthStyles = StyleSheet.create({
         fontSize: 24,
         color: Colors.lightTxtClr,
       },
-      ImgStyle:{width:150,height:150,borderRadius:1000},
+      ImgStyle:{width:150,height:150,borderRadius:1000,marginTop:10
+      },
       inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -31,7 +32,7 @@ const AuthStyles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 15,
         paddingVertical: 15,
-        marginBottom: 15,
+        // marginBottom: 15,
       },
       input: {
         flex: 1,
@@ -40,7 +41,7 @@ const AuthStyles = StyleSheet.create({
       },
       errorText: {
         color: 'red',
-        marginBottom: 10,
+        marginBottom: 0,
         alignSelf:'flex-start',
         marginLeft:20
       },

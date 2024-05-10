@@ -18,8 +18,20 @@ import GoBack from '../../Global/Styling/BackButton';
 function SignUp(){
   const navigation = useNavigation()
   const [Email, setEmail] = useState('');
+  const [username, setusername] = useState('');
+  const [firstname, setfirstname] = useState('');
+  const [lastname, setlastname] = useState('');
+
   const [password, setPassword] = useState('');
   const [EmailError, setEmailError] = useState('');
+  const [usernameError, setusernameError] = useState('');
+
+  const [firstnameError, setfirstnameError] = useState('');
+
+  const [lastnameError, setlastnameError] = useState('');
+
+
+  
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +40,7 @@ function SignUp(){
 
 
   
-  const handleLogin = () => {
+  const handleSignup = () => {
     if (!Email) {
         setEmailError('Email is required');
       } else {
@@ -39,14 +51,70 @@ function SignUp(){
       } else {
         setPasswordError('');
       }
-      if(Email && password){
+      if (!username) {
+        setusernameError('username is required');
+      } else {
+        setusernameError('');
+      }
+      if (!firstname) {
+        setfirstnameError('firstname is required');
+      } else {
+        setfirstnameError('');
+      }
+      if (!lastname) {
+        setlastnameError('lastname is required');
+      } else {
+        setlastnameError('');
+      }
+      if(Email && password&& username && firstname && lastname){
     setLoading(true)
-
+SignUp()
         // loginFirebase()
       }
       // Add your login logic here
     };
 
+
+    function SignUp(){
+      const formdata = new FormData();
+formdata.append("username", username);
+formdata.append("password", password);
+formdata.append("email", Email);
+formdata.append("firstname", firstname);
+formdata.append("lastname", lastname);
+
+const requestOptions = {
+  method: "POST",
+  body: formdata,
+  redirect: "follow"
+};
+
+fetch("https://api.earnflixofficial.com/api/register", requestOptions)
+  .then((response) => response.json())
+  .then((result) => {console.log(result)
+    if(result.user){
+
+      AsyncStorage.setItem("user",JSON.stringify(result.user))
+      navigation.navigate('BottomNavigation')
+
+
+    }
+    else if(result.message && !result.user){
+
+      Alert.alert("Erro",result.message)
+
+    }
+    else{
+      Alert.alert("Erro","something went wrong try again!")
+
+    }
+
+  })
+  .catch((error) => console.error(error))
+  .finally(() =>setLoading(false) );
+    }
+
+  
  
   
 
@@ -54,14 +122,11 @@ function SignUp(){
 
   
   return (
-    <SafeAreaView style={AuthStyles.container}>
-      {/* <ScrollView> */}
-      <View
-      style={{alignSelf:'flex-start',marginLeft:20}}
-      >
+    <View style={AuthStyles.container}>
+      <ScrollView >
 
-      <GoBack/>
-      </View>
+      {/* <ScrollView> */}
+    
 
     {/* Logo or image */}
     <View style={AuthStyles.logoContainer}>
@@ -70,6 +135,20 @@ function SignUp(){
       <Image source={LogoImg} style={AuthStyles.ImgStyle}/>
     </View>
     
+
+ {/* username Field */}
+ <View style={[AuthStyles.inputContainer, { borderColor: usernameError && !username? 'red' : '#3C3737' }]}>
+      <AntDesign name="user" size={24} color="white" />
+      <TextInput
+        style={AuthStyles.input}
+        placeholder="username"
+        placeholderTextColor="#808080"
+        onChangeText={(text) => setusername(text)}
+      />  
+    </View>
+    <Text style={AuthStyles.errorText}>{!username && usernameError}</Text>
+
+
     {/* Email Field */}
     <View style={[AuthStyles.inputContainer, { borderColor: EmailError && !Email? 'red' : '#3C3737' }]}>
       <AntDesign name="user" size={24} color="white" />
@@ -92,13 +171,41 @@ function SignUp(){
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
       />
+
+
+
     </View>
+<Text style={AuthStyles.errorText}>{!password && passwordError}</Text>
+
+       {/* firstname Field */}
+       <View style={[AuthStyles.inputContainer, { borderColor: firstnameError && !firstname? 'red' : '#3C3737' }]}>
+      <AntDesign name="user" size={24} color="white" />
+      <TextInput
+        style={AuthStyles.input}
+        placeholder="firstname"
+        placeholderTextColor="#808080"
+        onChangeText={(text) => setfirstname(text)}
+      />  
+    </View>
+    <Text style={AuthStyles.errorText}>{!firstname && firstnameError}</Text>
+
+     {/* lastname Field */}
+     <View style={[AuthStyles.inputContainer, { borderColor: lastnameError && !lastname? 'red' : '#3C3737' }]}>
+      <AntDesign name="user" size={24} color="white" />
+      <TextInput
+        style={AuthStyles.input}
+        placeholder="lastname"
+        placeholderTextColor="#808080"
+        onChangeText={(text) => setlastname(text)}
+      />  
+    </View>
+    <Text style={AuthStyles.errorText}>{!lastname && lastnameError}</Text>
    
     {
       loading === false ?
-    <TouchableOpacity style={AuthStyles.button} onPress={()=> handleLogin()}>
+    <TouchableOpacity style={AuthStyles.button} onPress={()=> handleSignup()}>
       <AntDesign name="login" size={24} color="black" />
-      <Text style={AuthStyles.buttonText}>Login</Text>
+      <Text style={AuthStyles.buttonText}>Sign Up</Text>
     </TouchableOpacity>
 :
     <TouchableOpacity style={AuthStyles.button}>
@@ -121,9 +228,13 @@ style={AuthStyles.footerText}>Forget Password</Text>
 
       style={AuthStyles.footerText}>Don\t have an account? Sign Up</Text>
     </View>
-    {/* </ScrollView> */}
+    <View style={{height:200,width:100}}>
 
-  </SafeAreaView>
+    </View>
+    {/* </ScrollView> */}
+    </ScrollView>
+
+  </View>
   );
 };
 

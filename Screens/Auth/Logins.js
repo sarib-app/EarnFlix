@@ -12,12 +12,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import GoBack from '../../Global/Styling/BackButton';
+import BaseUrl from '../../Url';
 // Add scope and custom parameters if needed
 function LoginScreen(){
   const navigation = useNavigation()
-  const [Email, setEmail] = useState('');
+  const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
-  const [EmailError, setEmailError] = useState('');
+  const [usernameError, setusernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -27,27 +28,63 @@ function LoginScreen(){
 
   
   const handleLogin = () => {
-    navigation.navigate('BottomNavigation')
-    if (!Email) {
-        setEmailError('Email is required');
+    if (!username) {
+        setusernameError('username is required');
       } else {
-        setEmailError('');
+        setusernameError('');
       }
       if (!password) {
         setPasswordError('Password is required');
       } else {
         setPasswordError('');
       }
-      if(Email && password){
+      if(username && password){
     setLoading(true)
-
+    login()
         // loginFirebase()
       }
       // Add your login logic here
     };
 
  
-  
+  function login(){
+    const formdata = new FormData();
+formdata.append("username", username);
+formdata.append("password", password);
+
+const requestOptions = {
+  method: "POST",
+  body: formdata,
+  redirect: "follow"
+};
+
+fetch(`${BaseUrl}login`, requestOptions)
+  .then((response) => response.json())
+  .then((result) => {
+    if(result.user){
+
+      AsyncStorage.setItem("user",JSON.stringify(result.user))
+      navigation.navigate('BottomNavigation')
+setusernameError("")
+setPasswordError("")
+    }
+    else if(result.message && !result.user){
+      Alert.alert("Erro",result.message)
+    }
+    else{
+      Alert.alert("Erro","something went wrong try again!")
+
+    }
+    console.log(result)})
+  .catch((error) => {console.error(error)
+
+    Alert.alert("Erro","something went wrong try again!")
+
+  })
+  .finally(()=>{
+    setLoading(false)
+  })
+  }
 
 
 
@@ -55,12 +92,7 @@ function LoginScreen(){
   return (
     <SafeAreaView style={AuthStyles.container}>
       {/* <ScrollView> */}
-      <View
-      style={{alignSelf:'flex-start',marginLeft:20}}
-      >
-
-      <GoBack/>
-      </View>
+  
 
     {/* Logo or image */}
     <View style={AuthStyles.logoContainer}>
@@ -69,17 +101,17 @@ function LoginScreen(){
       <Image source={LogoImg} style={AuthStyles.ImgStyle}/>
     </View>
     
-    {/* Email Field */}
-    <View style={[AuthStyles.inputContainer, { borderColor: EmailError && !Email? 'red' : '#3C3737' }]}>
+    {/* username Field */}
+    <View style={[AuthStyles.inputContainer, { borderColor: usernameError && !username? 'red' : '#3C3737' }]}>
       <AntDesign name="user" size={24} color="white" />
       <TextInput
         style={AuthStyles.input}
-        placeholder="Email"
+        placeholder="username"
         placeholderTextColor="#808080"
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={(text) => setusername(text)}
       />  
     </View>
-    <Text style={AuthStyles.errorText}>{!Email && EmailError}</Text>
+    <Text style={AuthStyles.errorText}>{!username && usernameError}</Text>
 
     {/* Password Field */}
     <View style={[AuthStyles.inputContainer, { borderColor: passwordError && !password ? 'red' : '#3C3737' }]}>
@@ -92,7 +124,8 @@ function LoginScreen(){
         onChangeText={(text) => setPassword(text)}
       />
     </View>
-   
+    <Text style={AuthStyles.errorText}>{!password && passwordError}</Text>
+
     {
       loading === false ?
     <TouchableOpacity style={AuthStyles.button} onPress={()=> handleLogin()}>

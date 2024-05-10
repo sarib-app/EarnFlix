@@ -4,6 +4,7 @@ import { View, Text, FlatList, Image, TouchableOpacity ,StyleSheet} from 'react-
 import GlobalStyles from '../../Global/Styling/GlobalStyles';
 import HeaderMain from '../../Global/components/HeaderMain';
 import { useNavigation } from '@react-navigation/native';
+import BannerAdGlobal from '../Ads/BannerAbsolute';
 const API_KEY = 'AIzaSyCfm2NMzrDNmzdj0-wvQTjPPtL8cwesOFI';
 const API_URL = 'https://www.googleapis.com/youtube/v3/search';
 
@@ -52,11 +53,15 @@ const navigation = useNavigation()
   return (
     <View style={GlobalStyles.container}>
         <HeaderMain/>
+        <BannerAdGlobal/>
       <FlatList
         data={videos}
         renderItem={renderVideoItem}
         keyExtractor={(item) => item.id.videoId}
       />
+      <View style={{position:'absolute',bottom:100}}>
+      <BannerAdGlobal/>
+      </View>
     </View>
   );
 };

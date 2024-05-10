@@ -24,7 +24,7 @@ const GlobalStyles = StyleSheet.create({
       videoPlayerContainer:{
         width:WindowWidth,
         height:300,
-        backgroundColor:"black",
+        backgroundColor:Colors.SecondaryDark,
         // alignItems: 'center',
         marginBottom: 5,
         // height:WindowHeight/4,
@@ -64,10 +64,12 @@ const GlobalStyles = StyleSheet.create({
       },
       MainHeaderView:{
         width:WindowWidth,
-        height:WindowHeight/8,
+        // height:WindowHeight/10,
         backgroundColor:Colors.MainBgColor,
+        paddingBottom:5,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        alignSelf:'center'
       },
       HeaderTitle:{
         color:Colors.lightTxtClr,
