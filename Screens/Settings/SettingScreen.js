@@ -38,6 +38,7 @@ const navigation = useNavigation()
     // Replace 'your-email@example.com' with your email address
     const email = `${subname}.earnflixofficial.com`;
     Linking.openURL("https://"+email);
+    const ss = "privacypolicy.earnflixofficial.com"
 
   };
 

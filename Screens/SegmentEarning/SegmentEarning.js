@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Dimensions,ScrollView } from 'react-native';
 import HeaderMain from '../../Global/components/HeaderMain';
 import { Colors } from '../../Global/Styling/Branding';
 import BaseUrl from '../../Url';
@@ -45,6 +45,13 @@ const SegmentEarning = () => {
                 records.length < 1 &&
                 <Text style={{color:Colors.FontColorI,fontWeight:'bold',fontSize:18,alignSelf:'center',marginTop:300}}>We could not find any record</Text>
             }
+
+            <ScrollView
+            nestedScrollEnabled={true}
+            style={{alignSelf:"center"}}
+            contentContainerStyle={{alignItems:'center'}}
+            >
+
       {records.map((record, index) => (
         <View key={index} style={styles.card}>
           <View style={styles.cardRow}>
@@ -64,6 +71,8 @@ const SegmentEarning = () => {
           </View>
         </View>
       ))}
+            </ScrollView>
+
     </View>
   );
 };

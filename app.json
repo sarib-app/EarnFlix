@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.earnflixapps.app",
-      "versionCode": 4
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +35,6 @@
     }
   },
   "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-6119482859365304~8900058849"
+    "android_app_id": "ca-app-pub-8470925379014713~9204903492"
   }
 }

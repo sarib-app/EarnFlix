@@ -75,7 +75,7 @@ const GlobalStyles = StyleSheet.create({
         color:Colors.lightTxtClr,
         fontWeight:'bold',
         fontSize:24,
-        marginTop:50
+        marginTop:10
       }
     });
     

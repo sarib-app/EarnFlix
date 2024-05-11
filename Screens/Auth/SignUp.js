@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import AuthStyles from './AuthStyles';
 import { Colors } from '../../Global/Styling/Branding';
-import LogoImg from '../../assets/Imgs/LogoImg.jpg'
+import LogoImg from '../../assets/Imgs/LogoImg.png'
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
