@@ -7,6 +7,7 @@ const WindowWidth = Dimensions.get('window').width
 const WindowHeight = Dimensions.get('window').height; 
 import HeaderMain from '../../Global/components/HeaderMain';
 import { useNavigation } from '@react-navigation/native';
+import BannerAdSmall from '../Ads/BAnnerAdsSmall';
 // import { ScrollView } from 'react-native-gesture-handler';
 
 const SettingScreen = () => {
@@ -45,6 +46,9 @@ const navigation = useNavigation()
   return (
     <View style={styles.container}>
         <HeaderMain />
+
+<BannerAdSmall/>
+
         <ScrollView
         // style={{width:"100%"}}
         contentContainerStyle={{alignItems:'center'}}
@@ -122,7 +126,10 @@ const navigation = useNavigation()
         <Text style={styles.cardText}>Logout</Text>
       </TouchableOpacity>
       </ScrollView>
+      <View style={{position:'absolute',bottom:20}}> 
 
+<BannerAdSmall/>
+</View>
     </View>
   );
 };

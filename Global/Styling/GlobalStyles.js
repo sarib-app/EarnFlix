@@ -23,17 +23,19 @@ const GlobalStyles = StyleSheet.create({
       },
       videoPlayerContainer:{
         width:WindowWidth,
-        height:300,
-        backgroundColor:Colors.SecondaryDark,
+        marginTop:20,
+        height:250,
+        // backgroundColor:Colors.SecondaryDark,
         // alignItems: 'center',
         marginBottom: 5,
         // height:WindowHeight/4,
+        alignItems:'center',
         justifyContent:'center'
       },
       VideoContainerWrap:{
-        flex:1
-        // width:300,
-        // height:400,
+        // flex:1,
+        width:WindowWidth,
+        height:150,
         // backgroundColor:"white",
         // alignItems: 'center',
         // marginBottom: 5,
@@ -66,6 +68,7 @@ const GlobalStyles = StyleSheet.create({
         width:WindowWidth,
         // height:WindowHeight/10,
         backgroundColor:Colors.MainBgColor,
+        padding:35,
         paddingBottom:5,
         justifyContent:'center',
         alignItems:'center',

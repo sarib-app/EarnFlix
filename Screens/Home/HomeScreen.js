@@ -1,31 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity ,StyleSheet} from 'react-native';
-// import GlobalStyles from './Global/Styling/GlobalStyles';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyles from '../../Global/Styling/GlobalStyles';
 import HeaderMain from '../../Global/components/HeaderMain';
-import { useNavigation } from '@react-navigation/native';
 import BannerAdGlobal from '../Ads/BannerAbsolute';
+import BannerAdSmall from '../Ads/BAnnerAdsSmall';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+
 const API_KEY = 'AIzaSyCfm2NMzrDNmzdj0-wvQTjPPtL8cwesOFI';
 const API_URL = 'https://www.googleapis.com/youtube/v3/search';
 
-const   HomeScreen = () => {
-  const [videos, setVideos] = useState([]);
-const navigation = useNavigation()
-  useEffect(() => {
-    if(videos.length < 1){
+const interstitialAdId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-3440105356857943/1889997557';
+const interstitial = InterstitialAd.createForAdRequest(interstitialAdId);
 
-      fetchTopVideos();
+const HomeScreen = () => {
+  const [videos, setVideos] = useState([]);
+  const [isAdLoaded, setIsAdLoaded] = useState(false);
+  const navigation = useNavigation();
+const focused = useIsFocused()
+  useEffect(() => {
+    checkAndFetchVideos();
+// AsyncStorage.clear()
+    // Load interstitial ad
+    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      setIsAdLoaded(true);
+    });
+
+    interstitial.load();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [focused]);
+
+  const checkAndFetchVideos = async () => {
+    try {
+      const savedVideos = await AsyncStorage.getItem('topVideos');
+      if (savedVideos) {
+        setVideos(JSON.parse(savedVideos));
+        console.log('Loaded videos from AsyncStorage');
+      } else {
+        fetchTopVideos();
+      }
+    } catch (error) {
+      console.error('Error checking and fetching videos:', error);
     }
-  }, []);
+  };
 
   const fetchTopVideos = async () => {
+    console.log("function ran")
     try {
       const response = await fetch(`${API_URL}?key=${API_KEY}&part=snippet&maxResults=30&type=video&chart=mostPopular&regionCode=PK`);
       const data = await response.json();
       setVideos(data.items);
-      console.log(data.items)
+      await AsyncStorage.setItem('topVideos', JSON.stringify(data.items));
+      console.log('Fetched and saved videos to AsyncStorage');
     } catch (error) {
       console.error('Error fetching top videos:', error);
+    }
+  };
+
+  const handleVideoPress = (videoId) => {
+    if (isAdLoaded) {
+      interstitial.show();
+      interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+        navigation.navigate('VideoPlayer', { videoID: videoId });
+        interstitial.load(); // Load the next ad
+      });
+    } else {
+      navigation.navigate('VideoPlayer', { videoID: videoId });
     }
   };
 
@@ -39,73 +83,25 @@ const navigation = useNavigation()
         <View style={GlobalStyles.videoDetails}>
           <Text style={GlobalStyles.videoTitle}>{item.snippet.title}</Text>
           <Text style={GlobalStyles.channelName}>{item.snippet.channelTitle}</Text>
-        
         </View>
       </View>
     </TouchableOpacity>
   );
 
-  const handleVideoPress = (videoId) => {
-    // Handle video press (e.g., navigate to video player screen)
-    navigation.navigate("VideoPlayer",{videoID:videoId})
-  };
-
   return (
     <View style={GlobalStyles.container}>
-        <HeaderMain/>
-        <BannerAdGlobal/>
+      <HeaderMain />
+      <BannerAdGlobal />
       <FlatList
         data={videos}
         renderItem={renderVideoItem}
         keyExtractor={(item) => item.id.videoId}
       />
-      <View style={{position:'absolute',bottom:100}}>
-      <BannerAdGlobal/>
+      <View style={{ position: 'absolute', bottom: 100 }}>
+        <BannerAdSmall />
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-flex:1,
-    backgroundColor: '#1e1e1e', // Dark background color
-    padding: 10,
-  },
-  videoContainer: {
-    // flexDirection: 'row',
-    width:"100%",
-    backgroundColor:"black",
-    // alignItems: 'center',
-    marginBottom: 5,
-  },
-  thumbnail: {
-    width: "100%",
-    height: 200,
-    marginRight: 10,
-  },
-  videoDetails: {
-    flex: 1,
-    margin:10
-  },
-  videoTitle: {
-    color: '#ffffff', // White text color
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  channelName: {
-    color: '#9e9e9e', // Lighter text color
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-  },
-  statsText: {
-    color: '#9e9e9e', // Lighter text color
-    fontSize: 12,
-    marginRight: 10,
-  },
-});
-export default  HomeScreen;
+export default HomeScreen;

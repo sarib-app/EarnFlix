@@ -5,6 +5,9 @@ import { Colors } from '../../Global/Styling/Branding';
 import BaseUrl from '../../Url';
 import getAsynData from '../../Global/components/GetAsyncs/GetAsynData';
 import { useIsFocused } from '@react-navigation/native';
+import { BannerAd } from 'react-native-google-mobile-ads';
+import BannerAdGlobal from '../Ads/BannerAbsolute';
+import BannerAdSmall from '../Ads/BAnnerAdsSmall';
 const WindowWidth = Dimensions.get('window').width
 const WindowHeight = Dimensions.get('window').height; 
 
@@ -41,6 +44,7 @@ const SegmentEarning = () => {
   return (
     <View style={styles.container}>
         <HeaderMain/>
+        <BannerAdSmall/>
         {
                 records.length < 1 &&
                 <Text style={{color:Colors.FontColorI,fontWeight:'bold',fontSize:18,alignSelf:'center',marginTop:300}}>We could not find any record</Text>
@@ -56,11 +60,11 @@ const SegmentEarning = () => {
         <View key={index} style={styles.card}>
           <View style={styles.cardRow}>
             <Text style={styles.label}>Time Spent:</Text>
-            <Text style={styles.value}>{record.time_spent}</Text>
+            <Text style={styles.value}>{record.time_spent} Minute(S)</Text>
           </View>
           <View style={styles.cardRow}>
             <Text style={styles.label}>Earning:</Text>
-            <Text style={styles.value}>{record.segment_earning}</Text>
+            <Text style={styles.value}>{record.segment_earning} $</Text>
             <TouchableOpacity style={styles.incomeIndicator}>
               <Text style={styles.incomeArrow}>↓</Text>
             </TouchableOpacity>
@@ -71,8 +75,13 @@ const SegmentEarning = () => {
           </View>
         </View>
       ))}
-            </ScrollView>
+ 
 
+            </ScrollView>
+            <View style={{position:'absolute',bottom:20}}> 
+
+<BannerAdSmall/>
+</View>
     </View>
   );
 };
